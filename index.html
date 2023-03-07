@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scientific Calculator</title>
+  <!-- Fontawesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!--  CSS -->
+  <style type="text/css" media="all">
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      list-style: none
+    }
+
+    :root {
+      --bg-color: #ececec;
+      --font-color: #252525
+    }
+
+
+    body {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-color);
+    }
+
+
+    .container {
+      width: 50%;
+    }
+
+    /* .title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: .02rem;
+      margin-bottom: 15px;
+      text-align: center;
+      color: #464755;
+    } */
+
+    .display {
+      width: 100%;
+      grid-column: span 5;
+      margin-bottom: 10px;
+      border: 2px solid rgba(0, 0, 0, .2);
+      border-radius: 3px
+    }
+
+    .display input {
+      color: var(--font-color);
+      background: transparent;
+      width: 100%;
+      height: 100px;
+      border: none;
+      outline: none;
+      text-align: right;
+      padding: 0 10px;
+      font-size: 1.7rem;
+      font-weight: 500;
+    }
+
+    .grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      place-items: center;
+      padding: 5px;
+      border-radius: 3px;
+      justify-content: center;
+      /* grid-gap: 10px; */
+      background: var(--bg-color);
+      box-shadow: 4px 4px 7px 5px rgba(0, 0, 0, .03)
+    }
+
+    .rowspan-2 {
+      grid-row: span 2;
+      height: 100%;
+    }
+
+    .colspan-2 {
+      grid-column: span 2;
+      width: 100%;
+    }
+
+    ul li {
+      font-weight: 500;
+      font-size: 22px;
+      color: var(--font-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 80px;
+      border: 1px solid rgba(0, 0, 0, .2);
+      transition: .4s linear;
+    }
+
+    ul li:hover {
+      background: rgba(255, 255, 255, .1);
+    }
+
+    ul li.hidden {
+      display: none
+    }
+
+    .pi img,
+    .root {
+      width: 20%;
+    }
+
+    .dot,
+    .result {
+      font-size: 2rem;
+      font-weight: 500
+    }
+
+    sup {
+      transform: translateY(-7px)
+    }
+
+    i {
+      color: var(--font-color);
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        width: 100%;
+      }
+
+      .grid {
+        padding: 0;
+        gap: 0
+      }
+
+      .display input {
+        height: 70px;
+        font-size: 1.5rem;
+      }
+
+      ul li {
+        font-size: 19px;
+        font-weight: 400;
+        height: 60px;
+      }
+
+      .result {
+        font-weight: 300;
+
+      }
+
+      body {
+        height: auto;
+      }
+
+      .title {
+        font-size: 1rem
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- <h1 class="title">Scientific<br>Calculator using JavaScript</h1> -->
+    <ul class="grid">
+      <div class="display">
+        <input class="output" type="text" readonly>
+      </div>
+      <!-- Rows -->
+      <li class="rowspan-2 hide" onclick="del()">DEL</li>
+      <li class="m">(</li>
+      <li class="m">)</li>
+      <li class="m">%</li>
+      <li class="hide" onclick="allClear()">AC</li>
+
+      <li class="hide pi" onclick=>
+        <img src="icon/pi.png" alt="" class="pi">
+      </li>
+      <li class="square hide" onclick="square()">X<sup>2</sup></li>
+      <li class="hide" onclick="root()">
+        <img src="icon/root.png" alt="" class="root">
+      </li>
+      <li class="m">+</li>
+
+      <li class="" onclick="sin()">sin</li>
+      <li class="">7</li>
+      <li class="">8</li>
+      <li class="">9</li>
+      <li class="minus">
+        <i class="fa-solid fa-minus"></i>
+      </li>
+
+      <li class="" onclick="cos()">cos</li>
+      <li class="">4</li>
+      <li class="">5</li>
+      <li class="">6</li>
+      <li class="">X</li>
+
+      <li class="" onclick="tan()">tan</li>
+      <li class="">1</li>
+      <li class="">2</li>
+      <li class="">3</li>
+      <li class="divide">
+        <i class="fa-solid fa-divide"></i>
+      </li>
+
+      <li class="" onclick="log()">log</li>
+      <li class="dot">.</li>
+      <li class="">0</li>
+      <li class="result hide colspan-2" onclick="answer()">=</li>
+    </ul>
+  </div>
+</body>
+<!-- JavaScript -->
+<script>
+  let keys = document.querySelectorAll('ul li'),
+    display = document.querySelector('.display .output');
+
+  keys.forEach((key) => {
+    key.addEventListener("click", (e) => {
+      let btnText = e.target.textContent;
+      if (btnText == 'X') {
+        btnText = '*';
+      }
+      if (e.target.classList.contains('divide')) {
+        btnText = '/';
+      }
+      if (e.target.classList.contains('minus')) {
+        btnText = '-';
+      }
+      if (e.target.classList.contains('pi')) {
+        btnText = 3.14159265359;
+      }
+      if (e.target.classList.contains('hide')) {
+        btnText.classList.add('hidden');
+      }
+      display.value += btnText;
+    })
+  })
+
+  function sin() {
+    display.value = Math.sin(display.value)
+  }
+
+  function cos() {
+    display.value = Math.cos(display.value)
+  }
+
+  function tan() {
+    display.value = Math.tan(display.value)
+  }
+
+  function log() {
+    display.value = Math.log(display.value)
+  }
+
+  function root() {
+    display.value = Math.sqrt(display.value, 2)
+  }
+
+  function square() {
+    display.value = display.value * display.value;
+  }
+
+  function allClear() {
+    display.value = '';
+  }
+
+  function del() {
+    display.value = display.value.substr(0, display.value.length - 1)
+  }
+
+  function answer() {
+    if (display.value.length <= 0) {
+      display.value = ''
+    }
+    else {
+      display.value = eval(display.value)
+    }
+  }
+</script>
+
+</html>
