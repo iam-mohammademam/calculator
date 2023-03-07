@@ -202,7 +202,9 @@
       <li class="">4</li>
       <li class="">5</li>
       <li class="">6</li>
-      <li class="">X</li>
+      <li class="multiply">
+        <i class="fa-solid fa-times"></i>
+      </li>
 
       <li class="" onclick="tan()">tan</li>
       <li class="">1</li>
@@ -227,11 +229,12 @@
   keys.forEach((key) => {
     key.addEventListener("click", (e) => {
       let btnText = e.target.textContent;
-      if (btnText == 'X') {
-        btnText = '*';
-      }
+      
       if (e.target.classList.contains('divide')) {
         btnText = '/';
+      }
+      if (e.target.classList.contains('multiply')) {
+        btnText = '*';
       }
       if (e.target.classList.contains('minus')) {
         btnText = '-';
